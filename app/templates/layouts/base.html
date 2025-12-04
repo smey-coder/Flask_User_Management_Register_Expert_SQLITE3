@@ -16,7 +16,23 @@
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
             <div class="container-fluid">
                 <a class="navbar-brand">
-                    User Management
+                    Users
+                </a>
+
+                <a class="navbar-brand" href="{{ url_for('user.list_users') }}">
+                    Roles
+                </a>
+
+                <a class="navbar-brand" href="{{ url_for('role.list_roles') }}">
+                    Permissions
+                </a>
+
+                <a class="navbar-brand">
+                    Logged in as: {{ current_user.username }}
+                </a>
+
+                <a class="navbar-brand" href="{{ url_for('auth.logout') }}">
+                    Logout
                 </a>
             </div>
         </nav>

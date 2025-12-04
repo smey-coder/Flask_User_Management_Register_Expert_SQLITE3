@@ -11,14 +11,12 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     full_name = db.Column(db.String(80), nullable=False)
     is_active = db.Column(db.Boolean, default=True, nullable=False)
-    
     #NEW: store only the hash, never plain text
     password_hash = db.Column(db.String(255), nullable=False)
-    
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = db.Column(
-        db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
-    )
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    
+    roles= db
     
     def set_password(self, password: str) -> None:
         self.password_hash = generate_password_hash(password)

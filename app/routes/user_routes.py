@@ -104,3 +104,5 @@ def delete(user_id: int):
     flash("User was deleted successfully.", "success")
     
     return redirect(url_for("users.index"))
+
+    

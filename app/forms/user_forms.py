@@ -131,3 +131,17 @@ class UserEditForm(FlaskForm):
 class ConfirmDeleteForm(FlaskForm):
     submit = SubmitField("Confirm Delete")
     
+
+class LoginForm(FlaskForm):
+    username = StringField(
+        "Username",
+        validators=[DataRequired()],
+        render_kw={"placeholder": "Enter your username"},
+    )
+    password = PasswordField(
+        "Password",
+        validators=[DataRequired()],
+        render_kw={"placeholder": "Enter your password"},
+    )
+    is_active = BooleanField("Remember me", default=True)
+    submit = SubmitField("Login")

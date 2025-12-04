@@ -1,0 +1,32 @@
+{% extends "layouts/base.html"%}
+{% block title %} Login {% endblock %}
+
+{% block content %}
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h3 class="h4 mb-4">Sign In</h3>
+
+        <form method="POST" action="{{ url_for('auth.login') }}">
+            {{ form.hidden_tag() }}
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                {{ form.username(class_='form-control', placeholder='Enter your username') }}
+                {% if form.username.errors %}
+                <div class="text-danger">{{ form.username.errors[0] }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                {{ form.password(class_='form-control', placeholder='Enter your password') }}
+                {% if form.password.errors %}
+                <div class="text-danger">{{ form.password.errors[0] }}</div>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+    </div>
+    {% endif %}
+    {% endblock %}
