@@ -20,20 +20,15 @@
     <dt class="col-sm-3">Email</dt>
     <dd class="col-sm-9">{{ user.email }}</dd>
 
-    <dt class="col-sm-3">Status</dt>
-    <dd class="col-sm-9">
-        {% if user.is_active %}
-        <span class="badge text-bg-success">Active</span>
-        {%else%}
-        <span class="badge text-bg-sencondary">Inactive</span>
-        {% endif %}
-    </dd>
-
-    <dt class="col-sm-3">Created at</dt>
-    <dd class="col-sm-9">{{ user.created_at }}</dd>
-
-    <dt class="col-sm-3">Last updated</dt>
-    <dd class="col-sm-9">{{ user.updated_at }}</dd>
+    <h1>Users with this Role</h1>
+    {% if role.users %}
+    <ul>
+        {% for u in role.users %}
+        <li>{{ u.username }} ({{ u.email }})</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <a href="{{ url_for('roles.index')}}" class="btn btn-sm btn-outline-primary">Back</a>
 
 </dl>
 {% endblock %}
