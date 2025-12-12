@@ -16,34 +16,45 @@
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
             <div class="container-fluid">
                 <a class="navbar-brand" href="{{ url_for('home') }}">
-                    <i class="bi bi-people-fill me-2"></i> User Management
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <i class="bi bi-people-fill me-2"></i> RBAC Demo </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                     aria-controls="navbarMain" aria-expanded="false" aria-lable="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
+                        
+                        <li class="nav-item">
+                            <a class="nav-link" {% if required.blueprint == 'tbl_users '%} action {% endif %} 
+                            href="{{ url_for('tbl_users.index') }}">User</a>
+                        </li>
+                        
+                        <li class="nav-item">
+                            <a class="nav-link" {% if required.blueprint == 'tbl_roles '%} action {% endif %} 
+                            href="{{ url_for('tbl_roles.index') }}">Roles</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" {% if required.blueprint == 'tbl_permissions '%} action {% endif %} 
+                            href="{{ url_for('tbl_permissions.index') }}">Permissions</a>
+                        </li>
+                    </ul>
+
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                         {% if current_user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('users.index') }}">Users</a>
+                            <span class="navbar--text me-2">
+                                Logged in as <strong>{{ current_user.username }}</strong>
+                            </span>
                         </li>
+
                         <li class="nav-item">
-                            <span class="nav-link">|</span>
-                        </li>
-                        <li class="nav-item">
-                            <span class="nav-link">Welcome, <strong>{{ current_user.username }}</strong></span>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('auth.logout') }}">
-                                <i class="bi bi-box-arrow-right me-1"></i> Logout
-                            </a>
+                           <a class="nva-link" href="{{ url_for('auth.logout')}}">Logout</a>
                         </li>
                         {% else %}
+
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('auth.login') }}">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('auth.register') }}">Register</a>
+                           <a class="nva-link" href="{{ url_for('auth.login')}}">Login</a>
                         </li>
                         {% endif %}
                     </ul>

@@ -1,7 +1,7 @@
 from flask import Flask, redirect, url_for
 from config import Config
 from extensions import db, csrf, login_manager
-from app.models import User
+from app.models.user import UserTable
 
 def create_app(config_class: type[Config] = Config):
     app = Flask(__name__)
@@ -18,8 +18,8 @@ def create_app(config_class: type[Config] = Config):
     
     # This function tells Flask-Login how to load a user from session
     @login_manager.user_loader
-    def load_user(user_id: int) -> User | None:
-        return User.query.get(int(user_id))
+    def load_user(user_id: int) -> UserTable | None:
+        return UserTable.query.get(int(user_id))
     
     
     #Register blueprints
@@ -40,7 +40,7 @@ def create_app(config_class: type[Config] = Config):
     
     #Create tables
     with app.app_context():
-        from app.models import User, Role, Permission
+        from app.models import UserTable, RoleTable, PermissionTable
         db.create_all()
         
     return app

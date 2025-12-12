@@ -11,7 +11,7 @@ from flask_login import login_required
 from app.forms.user_forms import UserCreateForm, UserEditForm, ConfirmDeleteForm
 from app.services.user_service import UserService
 
-user_bp = Blueprint("users", __name__, url_prefix="/users")
+user_bp = Blueprint("tbl_users", __name__, url_prefix="/users")
 
 @user_bp.route("/")
 @login_required
@@ -39,28 +39,17 @@ def create():
             "is_active": form.is_active.data,
         }
         password = form.password.data
-        try:
-            user = UserService.create(data, password)
-        except Exception as exc:
-            flash("Failed to create user: an internal error occurred.", "danger")
-            return render_template("users/create.html", form=form)
+        role_id = form.role_id.data or None
+        user = UserService.create_user(data, password, role_id)
         flash(f"User '{user.username}' was created successfully.", "success")
-        return redirect(url_for("users.index"))
-    else:
-        # If this is a POST but form did not validate, show debug info
-        from flask import request
-        if request.method == "POST":
-            # Log or flash errors to the user to help debugging
-            app_logger = __import__("logging").getLogger("app")
-            app_logger.warning("Create user: form failed to validate. Errors=%s", form.errors)
-            flash("There were errors creating the user. Please review the form.", "warning")
-
+        return redirect(url_for("tbl_users.index"))
+    
     return render_template("users/create.html", form=form)
 
 @user_bp.route("/<int:user_id>/edit", methods=["GET", "POST"])
 @login_required
 def edit(user_id: int):
-    user = UserService.get_by_id(user_id)
+    user = UserService.get_user_by_id(user_id)
     if user is None:
         abort(404)
         
@@ -74,26 +63,18 @@ def edit(user_id: int):
             "is_active": form.is_active.data,
         }
         password = form.password.data or None
-        try:
-            UserService.update(user, data, password)
-        except Exception as exc:
-            flash("Failed to update user: an internal error occurred.", "danger")
-            return render_template("users/edit.html", form=form, user=user)
+        role_id = form.role_id.data or None
+        
+        UserService.update_user(user, data, password, role_id)
         flash(f"User '{user.username}' was updated successfully.", "success")
-        return redirect(url_for("users.detail", user_id=user.id))
-    else:
-        from flask import request
-        if request.method == "POST":
-            app_logger = __import__("logging").getLogger("app")
-            app_logger.warning("Edit user: form failed to validate for user %s. Errors=%s", user_id, form.errors)
-            flash("There were errors updating the user. Please review the form.", "warning")
-    
+        return redirect(url_for("tbl_user.detail", user_id=user.id))
+
     return render_template("users/edit.html", form=form, user=user)
 
 @user_bp.route("/<int:user_id>/delete", methods=["GET"])
 @login_required
 def delete_confirm(user_id: int):
-    user = UserService.get_by_id(user_id)
+    user = UserService.get_user_by_id(user_id)
     if user is None:
         abort(404)
         
@@ -103,13 +84,12 @@ def delete_confirm(user_id: int):
 @user_bp.route("/<int:user_id>/delete", methods=["POST"])
 @login_required
 def delete(user_id: int):
-    user = UserService.get_by_id(user_id)
+    user = UserService.get_user_by_id(user_id)
     if user is None:
         abort(404)
         
-    UserService.delete(user)
+    UserService.delete_user(user)
     flash("User was deleted successfully.", "success")
-    
     return redirect(url_for("users.index"))
 
     

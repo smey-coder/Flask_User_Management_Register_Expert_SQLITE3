@@ -1,12 +1,12 @@
 from typing import List, Optional
-from app.models.user import User
+from app.models.user import UserTable
 from extensions import db
 from sqlalchemy import select, desc
 
 class AuthService:
     @staticmethod
-    def authenticate(username: str, password: str) -> Optional[User]:
-        user = User.query.filter_by(username=username).first()
+    def authenticate(username: str, password: str) -> Optional[UserTable]:
+        user = UserTable.query.filter_by(username=username).first()
         if user and user.check_password(password):
             return user
         return None
@@ -14,10 +14,10 @@ class UserService:
     """Service layer for handling user creation and management (mock implementation)."""
     
     @staticmethod
-    def create(data: dict, password: str) -> User:
+    def create(data: dict, password: str) -> UserTable:
         """Creates a new user instance and saves it to the database."""
         # This is a mock implementation for the registration route's usage.
-        user = User(
+        user = UserTable(
             username=data['username'],
             email=data['email'],
             full_name=data['full_name'],

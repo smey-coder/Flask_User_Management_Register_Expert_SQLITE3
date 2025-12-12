@@ -1,53 +1,37 @@
 from typing import List, Optional
-from app.models.permission import Permission
+from app.models.permission import PermissionTable
 from extensions import db
 
 class PermissionService:
     @staticmethod
-    def get_all() -> List[Permission]:
-        return Permission.query.order_by(Permission.id.desc()).all()
+    def get_permission_all() -> List[PermissionTable]:
+        return PermissionTable.query.order_by(PermissionTable.id.desc()).all()
     
     @staticmethod
-    def get_by_id(permission_id: int) -> Optional[Permission]:
-        return Permission.query.get(permission_id)
+    def get_permission_by_id(permission_id: int) -> Optional[PermissionTable]:
+        return PermissionTable.query.get(permission_id)
     
     @staticmethod
-    def create(data: dict) -> Permission:
-        permission = Permission(
-            name=data["name"],
-            description=data.get("description", ""),
+    def create_permission(data: dict) -> PermissionTable:
+        perm = PermissionTable(
+          code = data["code"],
+          name = data["name"],
+          module=data.get("module", "General"),
+          description= data.get("description") or "",
         )
-        db.session.add(permission)
-        try:
-            db.session.commit()
-        except Exception as exc:
-            import logging
-            logging.getLogger("app").exception("Failed to create permission: %s", exc)
-            db.session.rollback()
-            raise
-        return permission
+        db.session.add(perm)
+        db.session.commit()
     
     @staticmethod
-    def update(permission: Permission, data: dict) -> Permission:
+    def update_permission(permission: PermissionTable, data: dict) -> PermissionTable:
+        permission.code = data["code"]
         permission.name = data["name"]
-        permission.description = data.get("description", "")
+        permission.module= data.get("description") or ""
         
-        try:
-            db.session.commit()
-        except Exception as exc:
-            import logging
-            logging.getLogger("app").exception("Failed to update permission %s: %s", permission.id, exc)
-            db.session.rollback()
-            raise
+        db.session.commit()
         return permission
     
     @staticmethod
-    def delete(permission: Permission) -> None:
+    def delete(permission: PermissionTable) -> None:
         db.session.delete(permission)
-        try:
-            db.session.commit()
-        except Exception as exc:
-            import logging
-            logging.getLogger("app").exception("Failed to delete permission: %s", exc)
-            db.session.rollback()
-            raise
+        db.session.commit()

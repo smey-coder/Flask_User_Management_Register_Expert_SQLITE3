@@ -1,4 +1,5 @@
-from .user import User
-from .role import Role
-from .permission import Permission
-from .associations import user_roles, role_permissions
+from .user import UserTable
+from .role import RoleTable
+from .permission import PermissionTable
+
+__all__ = ["userTable", "RoleTable", "PermissionTable"]

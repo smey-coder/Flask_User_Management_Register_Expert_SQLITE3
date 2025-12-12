@@ -1,48 +1,82 @@
 from typing import List, Optional
-from app.models.role import Role
+from app.models.role import RoleTable
+from app.models.permission import PermissionTable
 from extensions import db
-from sqlalchemy import select, desc
-
+from sqlalchemy import select, desc 
 class RoleService:
     @staticmethod
-    def get_all() -> List[Role]:
-        return Role.query.order_by(Role.id.desc()).all()
+    def get_role_all() -> List[RoleTable]:
+        return RoleTable.query.order_by(RoleTable.id.desc()).all()
     
     @staticmethod
-    def get_by_id(role_id: int) -> Optional[Role]:
-        return Role.query.get(role_id)
+    def get_role_by_id(role_id: int) -> Optional[RoleTable]:
+        return RoleTable.query.get(role_id)
     
     @staticmethod
-    def create(data: dict) -> Role:
-        role = Role(
-            name = data["name"],
-            description = data["description"],
-            
+    
+    def create_role(
+        data: dict, 
+        permission_ids: Optional[List[int]] = None
+    ) ->RoleTable:
+        role = RoleTable(
+            name= data["name"],
+            description = data.get("description") or "",
         )
-        db.session.add(role)
-        try:
-            db.session.commit()
-        except Exception as exc:
-            import logging
-            logging.getLogger("app").exception("Error creating role: %s", exc)
-            db.session.rollback()
-        return role
-    
-    @staticmethod
-    def update(role: Role, data: dict) -> Role:
-        role.name = data["name"]
-        role.description = data["description"]
         
-        try:
-            db.session.commit()
+        if permission_ids:
+            permissions = db.session.scalar(
+                db.select(PermissionTable).filter(
+                    PermissionTable.id.in_(permission_ids)
+                )
+            ).all()
+            role.permissions = list(permissions)
             
-        except Exception as exc:
-            import logging
-            logging.getLogger("app").exception("Error updating role: %s", exc)
-            db.session.rollback()
+        db.session.add(role)
+        db.session.commit()
         return role
+        # try:
+        #     db.session.commit()
+        # except Exception as exc:
+        #     # Log and re-raise so caller can handle or app can show error
+        #     import logging
+        #     logging.getLogger("app").exception("Failed to create user: %s", exc)
+        #     db.session.rollback()
+        #     raise
+        # return user
     
     @staticmethod
-    def delete(role: Role) -> None:
+    def update_role(
+        role: RoleTable, 
+        data: dict, 
+        permissions_ids: Optional[List[int]] = None
+        ) -> RoleTable:
+        
+        role.name = data["name"],
+        role.description = data.get("description") or ""
+        
+        
+        if permissions_ids is not None:
+            perms = List[PermissionTable] = []
+            if permissions_ids:
+                perms = db.session.scalar(
+                    db.select(PermissionTable).filter(
+                        PermissionTable.id.in_(permissions_ids)
+                    )
+                ).all()
+                role.permissions = list(perms)
+            db.session.commit()
+            return role
+            
+        # try:
+        #     db.session.commit()
+        # except Exception as exc:
+        #     import logging
+        #     logging.getLogger("app").exception("Failed to update user %s: %s", user.id, exc)
+        #     db.session.rollback()
+        #     raise
+        # return user
+    
+    @staticmethod
+    def delete_role(role: RoleTable) -> None:
         db.session.delete(role)
         db.session.commit()

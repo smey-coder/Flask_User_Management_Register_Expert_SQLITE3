@@ -1,11 +1,10 @@
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
-
 from extensions import db
-
-class User(UserMixin, db.Model):
-    __tablename__ = "users"
+from app.models .associations import tbl_user_roles
+class UserTable(UserMixin, db.Model):
+    __tablename__ = "tbl_users"
     
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
@@ -17,11 +16,25 @@ class User(UserMixin, db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
     
+    # Note: match RoleTable.users
+    
+    roles = db.relationship("RoleTable", secondary=tbl_user_roles, back_populates="users")
+    
     def set_password(self, password: str) -> None:
         self.password_hash = generate_password_hash(password)
         
     def check_password(self, password: str) -> bool:
         return check_password_hash(self.password_hash, password)
+    
+    def has_role(self, role_name: str) -> bool:
+        return any(role.name == role_name for role in self.roles)
+    
+    def get_permission_code(self) -> set[str]:
+        
+        return {perm.code for role in self.roles for perm in role.permissions}
+    
+    def has_permission(self, permission_code: str) -> bool:
+        return permission_code in self.get_permission_code()
     
     def __repr__(self) -> str:
         return f"<User {self.username}>"

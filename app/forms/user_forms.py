@@ -2,8 +2,8 @@ import re
 from flask_wtf import FlaskForm
 from wtforms import BooleanField, StringField, SubmitField, PasswordField
 from wtforms.validators import DataRequired, Email, Length, EqualTo, ValidationError
-
-from app.models import User
+from app.models.user import UserTable
+from app.models.role import RoleTable
 from extensions import db
 
 # ------- helps ----------
@@ -70,14 +70,14 @@ class UserCreateForm(FlaskForm):
     
     def validate_username(self, field):
         exists = db.session.scalar(
-            db.select(User).filter(User.username == field.data)
+            db.select(UserTable).filter(UserTable.username == field.data)
         )
         if exists:
             raise ValidationError("This username is already taken.")
         
     def validate_email(self, field):
         exists = db.session.scalar(
-            db.select(User).filter(User.email == field.data)
+            db.select(UserTable).filter(UserTable.email == field.data)
         )
         if exists:
             raise ValidationError("This email is already taken.")
@@ -113,17 +113,17 @@ class UserEditForm(FlaskForm):
     
     submit = SubmitField("Update")
     
-    def __init__(self, original_user: User, *args, **kwargs):
+    def __init__(self, original_user: UserTable, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.original_user = original_user
     def validate_username(self, field):
-        q = db.select(User).filter(User.username == field.data, User.id != self.original_user.id)
+        q = db.select(UserTable).filter(UserTable.username == field.data, UserTable.id != self.original_user.id)
         exists = db.session.scalar(q)
         if exists:
             raise ValidationError("This username is already taken.")
 
     def validate_email(self, field):
-        q = db.select(User).filter(User.email == field.data, User.id != self.original_user.id)
+        q = db.select(UserTable).filter(UserTable.email == field.data, UserTable.id != self.original_user.id)
         exists = db.session.scalar(q)
         if exists:
             raise ValidationError("This email is already taken.")
