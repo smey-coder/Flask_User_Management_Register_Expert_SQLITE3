@@ -9,7 +9,7 @@ auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 @auth_bp.route("/login", methods=["GET", "POST"])
 def login():
     """User login route."""
-    if request.method:
+    if request.method == "POST":
         username = request.form.get("username", "").strip()
         password = request.form.get("password", "")
         
@@ -26,6 +26,7 @@ def login():
         
         flash("Invalide username or password", "danger")
         return redirect(url_for("auth.login"))
+    
     return render_template("auth/login.html")
 
 @auth_bp.route("/register", methods=["GET", "POST"])

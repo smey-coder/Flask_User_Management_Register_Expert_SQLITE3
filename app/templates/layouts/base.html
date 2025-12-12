@@ -25,17 +25,17 @@
                     <ul class="navbar-nav ms-auto">
                         
                         <li class="nav-item">
-                            <a class="nav-link" {% if required.blueprint == 'tbl_users '%} action {% endif %} 
+                            <a class="nav-link" {% if request.blueprint == 'tbl_users'%} action {% endif %} 
                             href="{{ url_for('tbl_users.index') }}">User</a>
                         </li>
                         
                         <li class="nav-item">
-                            <a class="nav-link" {% if required.blueprint == 'tbl_roles '%} action {% endif %} 
+                            <a class="nav-link" {% if request.blueprint == 'tbl_roles '%} action {% endif %} 
                             href="{{ url_for('tbl_roles.index') }}">Roles</a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" {% if required.blueprint == 'tbl_permissions '%} action {% endif %} 
+                            <a class="nav-link" {% if request.blueprint == 'tbl_permissions '%} action {% endif %} 
                             href="{{ url_for('tbl_permissions.index') }}">Permissions</a>
                         </li>
                     </ul>
