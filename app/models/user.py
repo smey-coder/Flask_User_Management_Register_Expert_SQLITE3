@@ -2,7 +2,7 @@ from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from extensions import db
-from app.models .associations import tbl_user_roles
+from app.models.associations import tbl_user_roles
 class UserTable(UserMixin, db.Model):
     __tablename__ = "tbl_users"
     

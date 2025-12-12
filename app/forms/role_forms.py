@@ -1,8 +1,8 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
+from wtforms import StringField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, Length, ValidationError
 
-from app.models.role import Role
+from app.models.role import RoleTable
 from extensions import db
 
 # Role forms
@@ -24,7 +24,7 @@ class RoleCreateForm(FlaskForm):
     
     def validate_name(self, field):
         exists = db.session.scalar(
-            db.select(Role).filter(Role.name == field.data)
+            db.select(RoleTable).filter(RoleTable.name == field.data)
         )
         if exists:
             raise ValidationError("This name is already taken.")
@@ -44,12 +44,12 @@ class RoleEditForm(FlaskForm):
     
     submit = SubmitField("Update")
     
-    def __init__(self, original_role: Role, *args, **kwargs):
+    def __init__(self, original_role: RoleTable, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.original_role = original_role
 
     def validate_name(self, field):
-        q = db.select(Role).filter(Role.name == field.data, Role.id != self.original_role.id)
+        q = db.select(RoleTable).filter(RoleTable.name == field.data, RoleTable.id != self.original_role.id)
         exists = db.session.scalar(q)
         if exists:
             raise ValidationError("This name is already taken.")
