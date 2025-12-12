@@ -9,16 +9,16 @@ from flask import(
 from app.forms.role_forms import RoleCreateForm, RoleEditForm, RoleConfirmDeleteForm
 from app.services.role_service import RoleService
 
-role_bp = Blueprint("roles", __name__, url_prefix="/roles")
+role_bp = Blueprint("tbl_roles", __name__, url_prefix="/roles")
 
 @role_bp.route("/")
 def index():
-    roles = RoleService.get_all()
+    roles = RoleService.get_role_all()
     return render_template("roles/index.html", roles=roles)
     
 @role_bp.route("/<int:role_id>")
 def detail(role_id: int):
-    role = RoleService.get_by_id(role_id)
+    role = RoleService.get_role_by_id(role_id)
     if role is None:
         abort(404)
         
@@ -33,12 +33,12 @@ def create():
             "description" : form.description.data,
         }
         try:
-            role = RoleService.create(data)
+            role = RoleService.create_role(data)
         except Exception as exc:
             flash("Failed to create role.", "danger")
             return render_template("roles/create.html", form=form)
         flash(f"Role '{role.name}' created successfully.", "success")
-        return redirect(url_for("roles.index"))
+        return redirect(url_for("tbl_roles.index"))
     else:
         from flask import request
         if request.method == "POST":
@@ -48,7 +48,7 @@ def create():
 
 @role_bp.route("/<int:role_id>/edit", methods=["GET", "POST"])
 def edit(role_id: int):
-    role = RoleService.get_by_id(role_id)
+    role = RoleService.get_role_by_id(role_id)
     if role is None:
         abort(404)
         
@@ -59,12 +59,12 @@ def edit(role_id: int):
             "description" : form.description.data,
         }
         try:
-            role = RoleService.update(role, data)
+            role = RoleService.update_role(role, data)
         except Exception as exc:
             flash("Failed to update role.", "danger")
             return render_template("roles/edit.html", form=form, role=role)
         flash(f"Role '{role.name}' updated successfully.", "success")
-        return redirect(url_for("roles.detail", role_id=role.id))
+        return redirect(url_for("tbl_roles.detail", role_id=role.id))
     else:
         from flask import request
         if request.method == "POST":
@@ -74,10 +74,10 @@ def edit(role_id: int):
 
 @role_bp.route("/<int:role_id>/delete", methods=["POST"])
 def delete(role_id: int):
-    role = RoleService.get_by_id(role_id)
+    role = RoleService.get_role_by_id(role_id)
     if role is None:
         abort(404)
         
-    RoleService.delete(role)
+    RoleService.delete_role(role)
     flash(f"Role '{role.name}' deleted successfully.", "success")
-    return redirect(url_for("roles.index"))
+    return redirect(url_for("tbl_roles.index"))

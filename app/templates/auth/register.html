@@ -1,4 +1,4 @@
-{% extends "layouts/base.html"%}
+{% extends "layouts/base.html" %}
 
 {%block title%} Sign up {% endblock %}
 
@@ -6,12 +6,12 @@
 <div class="row justify-content-center">
     <div class="col-md-6">
         <div class="card shadow-sm border-0">
-            <div class="card-header bg-primary-text-white">
-                <h4 class="md-0">Create a New Account</h4>
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0">Create a New Account</h4>
             </div>
             <div class="card-body">
                 <form method="POST" action="{{ url_for('auth.register')}}">
-                    <input type="hidden" name="csrf-token" value="{{ csrf_token()}}"></input>
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token()}}"></input>
                     <div class="mb-3">
                         <label for="username" class="from-label">Username</label>
                         <input 
@@ -75,13 +75,13 @@
                     </div>
 
                     <div class="d-grid mb-3">
-                        <button type="submit" class="btn btn--primary">Sign up</button>
+                        <button type="submit" class="btn btn-success">Sign up</button>
                     </div>
                 </form>
 
                 <hr>
                  <p class="mb-0 small text-center">
-                    Already have an account>
+                    Already have an account?
                     <a href="{{ url_for('auth.login')}}">Log In</a>
                  </p>
                 </hr>

@@ -12,13 +12,13 @@ from flask_login import login_required
 from app.forms.permission_forms import PermissionCreateForm, PermissionEditForm, PermissionConfirmDeleteForm
 from app.services.permission_service import PermissionService
 
-permission_bp = Blueprint("permissions", __name__, url_prefix="/permissions")
+permission_bp = Blueprint("tbl_permissions", __name__, url_prefix="/permissions")
 
 @permission_bp.route("/")
 @login_required
 def index():
     permissions = PermissionService.get_all()
-    return render_template("permissions/index.html", permissions=permissions)
+    return render_template("tbl_permissions/index.html", permissions=permissions)
 
 @permission_bp.route("/<int:permission_id>")
 @login_required
@@ -26,7 +26,7 @@ def detail(permission_id: int):
     permission = PermissionService.get_by_id(permission_id)
     if permission is None:
         abort(404)
-    return render_template("permissions/detail.html", permission=permission)
+    return render_template("tbl_permissions/detail.html", permission=permission)
 
 @permission_bp.route("/create", methods=["GET", "POST"])
 @login_required
@@ -40,17 +40,17 @@ def create():
         try:
             permission = PermissionService.create(data)
             flash(f"Permission '{permission.name}' created successfully.", "success")
-            return redirect(url_for("permissions.index"))
+            return redirect(url_for("tbl_permissions.index"))
         except Exception as exc:
             flash("Failed to create permission.", "danger")
-            return render_template("permissions/create.html", form=form)
+            return render_template("tbl_permissions/create.html", form=form)
     else:
         if request.method == "POST":
             import logging
             logging.getLogger("app").warning("Permission creation form validation failed: %s", form.errors)
             flash("There were errors creating the permission. Please review the form.", "warning")
     
-    return render_template("permissions/create.html", form=form)
+    return render_template("tbl_permissions/create.html", form=form)
 
 @permission_bp.route("/<int:permission_id>/edit", methods=["GET", "POST"])
 @login_required
@@ -69,17 +69,17 @@ def edit(permission_id: int):
         try:
             PermissionService.update(permission, data)
             flash(f"Permission '{permission.name}' updated successfully.", "success")
-            return redirect(url_for("permissions.detail", permission_id=permission.id))
+            return redirect(url_for("tbl_permissions.detail", permission_id=permission.id))
         except Exception as exc:
             flash("Failed to update permission.", "danger")
-            return render_template("permissions/edit.html", form=form, permission=permission)
+            return render_template("tbl_permissions/edit.html", form=form, permission=permission)
     else:
         if request.method == "POST":
             import logging
             logging.getLogger("app").warning("Permission edit form validation failed for %s: %s", permission_id, form.errors)
             flash("There were errors updating the permission. Please review the form.", "warning")
     
-    return render_template("permissions/edit.html", form=form, permission=permission)
+    return render_template("tbl_permissions/edit.html", form=form, permission=permission)
 
 @permission_bp.route("/<int:permission_id>/delete", methods=["GET"])
 @login_required
@@ -89,7 +89,7 @@ def delete_confirm(permission_id: int):
         abort(404)
     
     form = PermissionConfirmDeleteForm()
-    return render_template("permissions/delete_confirm.html", permission=permission, form=form)
+    return render_template("tbl_permissions/delete_confirm.html", permission=permission, form=form)
 
 @permission_bp.route("/<int:permission_id>/delete", methods=["POST"])
 @login_required
@@ -104,4 +104,4 @@ def delete(permission_id: int):
     except Exception as exc:
         flash("Failed to delete permission.", "danger")
     
-    return redirect(url_for("permissions.index"))
+    return redirect(url_for("tbl_permissions.index"))
