@@ -6,7 +6,7 @@ from flask import(
     url_for,
     abort,
 )
-from app.forms.role_forms import RoleCreateForm, RoleEditForm, ConfirmDeleteForm
+from app.forms.role_forms import RoleCreateForm, RoleEditForm, RoleConfirmDeleteForm
 from app.services.role_service import RoleService
 
 role_bp = Blueprint("roles", __name__, url_prefix="/roles")

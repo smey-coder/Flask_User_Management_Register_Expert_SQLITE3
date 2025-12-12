@@ -2,7 +2,6 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_user, logout_user, login_required
 from app.models.user import UserTable# Needed for type hints and registration logic
 from app.models.role import RoleTable
-from app.forms.multi_checkbox_field import UserCreateForm # Using the UserCreateForm from the same file for simplicity
 from app.services.user_service import UserService # Using both services
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
@@ -14,7 +13,7 @@ def login():
         username = request.form.get("username", "").strip()
         password = request.form.get("password", "")
         
-        user = UserTable.query.fliter_by(username=username).first()
+        user = UserTable.query.filter_by(username=username).first()
         
         if user and user.check_password(password):
             if not user.is_active:

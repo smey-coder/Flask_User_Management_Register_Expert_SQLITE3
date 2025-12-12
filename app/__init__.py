@@ -1,5 +1,7 @@
 from flask import Flask, redirect, url_for
+from flask_login import login_required
 from config import Config
+from flask_login import LoginManager
 from extensions import db, csrf, login_manager
 from app.models.user import UserTable
 
@@ -25,18 +27,21 @@ def create_app(config_class: type[Config] = Config):
     #Register blueprints
     from app.routes.user_routes import user_bp
     from app.routes.role_routes import role_bp
-    from app.routes.auth_routes import auth_bp
     from app.routes.permission_routes import permission_bp
-    
+    from app.routes.auth_routes import auth_bp
     app.register_blueprint(user_bp)
     app.register_blueprint(role_bp)
-    app.register_blueprint(auth_bp)
     app.register_blueprint(permission_bp)
+    app.register_blueprint(auth_bp)
     
     # Add this block so "/" redirects appropriately
     @app.route("/")
     def home():
-        return redirect(url_for("users.index"))
+        from flask_login import current_user
+        if current_user.is_authenticated:
+            return redirect(url_for("tbl_users.index"))
+        else:
+            return redirect(url_for("auth.login"))
     
     #Create tables
     with app.app_context():

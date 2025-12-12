@@ -9,7 +9,7 @@ from flask import (
 )
 from flask_login import login_required
 
-from app.forms.permission_forms import PermissionCreateForm, PermissionEditForm, ConfirmDeleteForm
+from app.forms.permission_forms import PermissionCreateForm, PermissionEditForm, PermissionConfirmDeleteForm
 from app.services.permission_service import PermissionService
 
 permission_bp = Blueprint("permissions", __name__, url_prefix="/permissions")
@@ -88,7 +88,7 @@ def delete_confirm(permission_id: int):
     if permission is None:
         abort(404)
     
-    form = ConfirmDeleteForm()
+    form = PermissionConfirmDeleteForm()
     return render_template("permissions/delete_confirm.html", permission=permission, form=form)
 
 @permission_bp.route("/<int:permission_id>/delete", methods=["POST"])

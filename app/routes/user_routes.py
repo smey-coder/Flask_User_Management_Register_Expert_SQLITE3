@@ -8,7 +8,7 @@ from flask import (
 )
 from flask_login import login_required
 
-from app.forms.user_forms import UserCreateForm, UserEditForm, ConfirmDeleteForm
+from app.forms.user_forms import UserCreateForm, UserEditForm, UserConfirmDeleteForm
 from app.services.user_service import UserService
 
 user_bp = Blueprint("tbl_users", __name__, url_prefix="/users")
@@ -16,13 +16,13 @@ user_bp = Blueprint("tbl_users", __name__, url_prefix="/users")
 @user_bp.route("/")
 @login_required
 def index():
-    users = UserService.get_all()
+    users = UserService.get_user_all()
     return render_template("users/index.html", users=users)
 
 @user_bp.route("/<int:user_id>")
 @login_required
 def detail(user_id: int):
-    user = UserService.get_by_id(user_id)
+    user = UserService.get_user_by_id(user_id)
     if user is None:
         abort(404)
     return render_template("users/detail.html", user=user)
@@ -78,7 +78,7 @@ def delete_confirm(user_id: int):
     if user is None:
         abort(404)
         
-    form = ConfirmDeleteForm()
+    form = UserConfirmDeleteForm()
     return render_template("users/delete_confirm.html", user=user,form=form)
 
 @user_bp.route("/<int:user_id>/delete", methods=["POST"])
@@ -90,6 +90,6 @@ def delete(user_id: int):
         
     UserService.delete_user(user)
     flash("User was deleted successfully.", "success")
-    return redirect(url_for("users.index"))
+    return redirect(url_for("tbl_users.index"))
 
     
