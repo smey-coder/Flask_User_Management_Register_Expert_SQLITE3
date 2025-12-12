@@ -25,12 +25,15 @@ class RoleTable(db.Model):
     
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
     
-    users = db.relationship("User", secondary=tbl_user_roles, back_populates="roles")
-    
-    permissions = db.relationship("Permission", secondary=tbl_role_permissions, back_populates="roles")
-    
-    def has_premission(self, permission_name: str) -> bool:
+    users = db.relationship("UserTable", secondary=tbl_user_roles, back_populates="roles")
+
+    permissions = db.relationship("PermissionTable", secondary=tbl_role_permissions, back_populates="roles")
+
+    def has_permission(self, permission_name: str) -> bool:
         return any(permission.name == permission_name for permission in self.permissions)
     
     def __repr__(self) -> str:
         return f"<Role {self.name}>"
+
+# Backwards-compatible alias: some modules import `Role` instead of `RoleTable`
+Role = RoleTable

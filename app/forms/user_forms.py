@@ -128,7 +128,7 @@ class UserEditForm(FlaskForm):
         if exists:
             raise ValidationError("This email is already taken.")
 
-class ConfirmDeleteForm(FlaskForm):
+class UserConfirmDeleteForm(FlaskForm):
     submit = SubmitField("Confirm Delete")
     
 

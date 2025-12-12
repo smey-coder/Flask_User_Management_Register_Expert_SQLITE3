@@ -1,20 +1,12 @@
 from flask_wtf import FlaskForm
-from wtforms import BooleanField, StringField, SubmitField, PasswordField
-from wtforms.validators import DataRequired
-
-class LoginForm(FlaskForm):
-    username = StringField(
-        "Username",
-        validators=[DataRequired()],
-        render_kw={"placeholder": "Enter your username"},
-    )
-    password = PasswordField(
-        "Password",
-        validators=[DataRequired()],
-        render_kw={"placeholder": "Enter your password"},
-    )
-    remember_me = BooleanField("Remember me", default=False)
+from wtforms import SelectMultipleField
+from wtforms.widgets import ListWidget, CheckboxInput
+class MultiCheckboxField(SelectMultipleField):
+    """A multiple-select, displayed as a list of checkboxes.
     
-    submit = SubmitField("Login")
-    
+    Iterating the field will produce subfields, allowing custom rendering of
+    the enclosed checkbox fields.
+    """
+    widget = ListWidget(prefix_label=False)
+    option_widget = CheckboxInput()
     
