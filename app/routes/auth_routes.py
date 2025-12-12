@@ -72,7 +72,7 @@ def register():
         default_role_id = default_role_id if default_role else None
         
         data = {
-            "Username": username,
+            "username": username,
             "email": email,
             "full_name": full_name,
             "is_active": True,
