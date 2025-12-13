@@ -7,11 +7,13 @@ from flask import (
     abort,
     request,
 )
+import logging
 from flask_login import login_required
 
 from app.forms.permission_forms import PermissionCreateForm, PermissionEditForm, PermissionConfirmDeleteForm
 from app.services.permission_service import PermissionService
 
+logger = logging.getLogger("app")
 permission_bp = Blueprint("tbl_permissions", __name__, url_prefix="/permissions")
 
 @permission_bp.route("/")
@@ -34,7 +36,9 @@ def create():
     form = PermissionCreateForm()
     if form.validate_on_submit():
         data = {
+            "code": form.code.data,
             "name": form.name.data,
+            "module": form.module.data,
             "description": form.description.data,
         }
         try:
@@ -63,7 +67,9 @@ def edit(permission_id: int):
     
     if form.validate_on_submit():
         data = {
+            "code": form.code.data,
             "name": form.name.data,
+            "module": form.module.data,
             "description": form.description.data,
         }
         try:
