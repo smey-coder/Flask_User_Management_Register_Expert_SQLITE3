@@ -42,18 +42,23 @@ def create():
             "module": form.module.data,
             "description": form.description.data,
         }
-        try:
-            permission = PermissionService.create_permission(data)
-            flash(f"Permission '{permission.name}' created successfully.", "success")
-            return redirect(url_for("tbl_permissions.index"))
-        except Exception as exc:
-            logger.exception("Failed to create permission: %s", exc)
-            flash("Failed to create permission.", "danger")
-    elif request.method == "POST":
-        logger.warning("Permission creation form validation failed: %s", form.errors)
-        flash("There were errors creating the permission. Please review the form.", "warning")
-
+        permission = PermissionService.create_permission(data)
+        flash(f"Permission '{permission.name}' was created successfully.", "success")
+        return redirect(url_for("tbl_permissions.index"))
+    
     return render_template("permissions/create.html", form=form)
+    #     try:
+    #         permission = PermissionService.create_permission(data)
+    #         flash(f"Permission '{permission.name}' created successfully.", "success")
+    #         return redirect(url_for("tbl_permissions.index"))
+    #     except Exception as exc:
+    #         logger.exception("Failed to create permission: %s", exc)
+    #         flash("Failed to create permission.", "danger")
+    # elif request.method == "POST":
+    #     logger.warning("Permission creation form validation failed: %s", form.errors)
+    #     flash("There were errors creating the permission. Please review the form.", "warning")
+
+    # return render_template("permissions/create.html", form=form)
 
 @permission_bp.route("/<int:permission_id>/edit", methods=["GET", "POST"])
 @login_required
@@ -71,20 +76,25 @@ def edit(permission_id: int):
             "module": form.module.data,
             "description": form.description.data,
         }
-        try:
-            PermissionService.update_permission(permission, data)
-            flash(f"Permission '{permission.name}' updated successfully.", "success")
-            return redirect(url_for("tbl_permissions.detail", permission_id=permission.id))
-        except Exception as exc:
-            flash("Failed to update permission.", "danger")
-            return render_template("permissions/edit.html", form=form, permission=permission)
-    else:
-        if request.method == "POST":
-            import logging
-            logging.getLogger("app").warning("Permission edit form validation failed for %s: %s", permission_id, form.errors)
-            flash("There were errors updating the permission. Please review the form.", "warning")
-    
+        PermissionService.update_permission(permission, data)
+        flash(f"Permission '{permission.name}' was updated successfully.", "success")
+        return redirect(url_for("tbl_permissions.detail", permission_id=permission.id))
+
     return render_template("permissions/edit.html", form=form, permission=permission)
+    #     try:
+    #         PermissionService.update_permission(permission, data)
+    #         flash(f"Permission '{permission.name}' updated successfully.", "success")
+    #         return redirect(url_for("tbl_permissions.detail", permission_id=permission.id))
+    #     except Exception as exc:
+    #         flash("Failed to update permission.", "danger")
+    #         return render_template("permissions/edit.html", form=form, permission=permission)
+    # else:
+    #     if request.method == "POST":
+    #         import logging
+    #         logging.getLogger("app").warning("Permission edit form validation failed for %s: %s", permission_id, form.errors)
+    #         flash("There were errors updating the permission. Please review the form.", "warning")
+    
+    # return render_template("permissions/edit.html", form=form, permission=permission)
 
 @permission_bp.route("/<int:permission_id>/delete", methods=["GET"])
 @login_required

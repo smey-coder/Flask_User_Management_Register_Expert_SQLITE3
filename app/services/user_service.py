@@ -1,8 +1,7 @@
 from typing import List, Optional
 from app.models.user import UserTable
 from app.models.role import RoleTable
-from extensions import db
-from sqlalchemy import select, desc 
+from extensions import db 
 class UserService:
     @staticmethod
     def get_user_all() -> List[UserTable]:
@@ -14,11 +13,9 @@ class UserService:
     
     @staticmethod
     
-    def create_user(
-        data: dict, 
-        password: str,
-        role_id: Optional[int] = None
-    ) ->UserTable:
+    def create_user(data: dict, password: str, 
+                    role_id: Optional[int] = None) -> UserTable:
+        
         user = UserTable(
             username=data["username"],
             email=data["email"],
@@ -27,24 +24,18 @@ class UserService:
         )
         user.set_password(password)
 
-        # Add user to session first
-        db.session.add(user)
-
-        # Assign roles AFTER user is in session
         if role_id:
             role = db.session.get(RoleTable, role_id)
             if role:
                 user.roles = [role]
-
+                
+        db.session.add(user)
         db.session.commit()
+        return user
     
     @staticmethod
-    def update_user(
-        user: UserTable, 
-        data: dict, 
-        password: Optional[str] = None,
-        role_id: Optional[int] = None,
-        ) -> UserTable:
+    def update_user(user: UserTable, data: dict, password: Optional[str] = None,
+                    role_id: Optional[int] = None ) -> UserTable:
         
         user.username = data["username"]
         user.email = data["email"]

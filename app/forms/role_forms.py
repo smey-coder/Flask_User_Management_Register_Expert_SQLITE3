@@ -51,7 +51,6 @@ class RoleCreateForm(FlaskForm):
     permission_ids = MultiCheckboxField(
         "Permissions",
         coerce=int,
-        render_kw={"placeholder": "Permissions granted to this role"},
     )
     
     submit = SubmitField("Save")
@@ -81,8 +80,10 @@ class RoleEditForm(FlaskForm):
     
     description = TextAreaField("Description")
     
-    permission_ids = MultiCheckboxField("Permissions",
-            coerce=int,)
+    permission_ids = MultiCheckboxField(
+        "Permissions",
+        coerce=int,
+    )
     
     submit = SubmitField("Update")
     
