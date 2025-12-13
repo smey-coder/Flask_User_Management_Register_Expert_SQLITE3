@@ -69,6 +69,7 @@ def edit(role_id: int):
         except Exception as exc:
             flash("Failed to update role.", "danger")
             return render_template("roles/edit.html", form=form, role=role)
+        
         flash(f"Role '{role.name}' updated successfully.", "success")
         return redirect(url_for("tbl_roles.detail", role_id=role.id))
     else:

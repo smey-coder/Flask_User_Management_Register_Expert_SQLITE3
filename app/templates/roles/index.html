@@ -1,4 +1,4 @@
-{% extends "layouts/base.html"%}
+{% extends "layouts/base.html" %}
 {% block title %} Roles {% endblock %}
 
 {% block content %}
@@ -10,50 +10,37 @@
 {% if roles %}
     <table class="table table-striped align-middle">
         <thead class="table-light">
+            <tr>
                 <th>Name</th>
                 <th>Description</th>
                 <th>Permissions</th>
-                <th class="text-end" style="wight: 160px;">Actions</th>
+                <th class="text-end" style="width: 160px;">Actions</th>
             </tr>
         </thead>
         <tbody>
             {% for role in roles %}
             <tr>
                 <td>
-                    <a
-                      href="{{ url_for('tbl_roles.detail', role_id = role.id)}}"
-                      class="text-decoration-none fw-semibold"
-                    >
-                      {{ role.name}}
-                     </a>
-                </td>
-                <td>{{ role.description or "_"}}</td>
-                <td>
-                    {% if role.permissions%}
-                    <span class="badge text-secondary">
-                        {{ role.permissions|length}} permissions{{ role.permissions|length != 1 and 's' or ''}}
-                    </span>
-                {% else %}
-                  <span class="text-muted small">No permissions</span>
-                  {% endif %}
-                </td>
-
-                <td class="text-end">
-                   
-                    <a
-                    href="{{ url_for('tbl_roles.edit', role_id = role.id)}}"
-                    class="btn btn-sm btn-outline-primary"
-                    title="Edit"
-                    >
-                     ✏️
+                    <a href="{{ url_for('tbl_roles.detail', role_id=role.id) }}" class="text-decoration-none fw-semibold">
+                        {{ role.name }}
                     </a>
-                    
-                    <a
-                    href="{{ url_for('tbl_roles.delete_confirm', role_id = role.id)}}"
-                    class="btn btn-sm btn-outline-danger"
-                    title="Delete"
-                    >
-                     🗑️
+                </td>
+                <td>{{ role.description or "_" }}</td>
+                <td>
+                    {% if role.permissions %}
+                        {% for perm in role.permissions %}
+                            <span class="badge bg-secondary">{{ perm.name }}</span>
+                        {% endfor %}
+                    {% else %}
+                        <span class="text-muted small">No permissions</span>
+                    {% endif %}
+                </td>
+                <td class="text-end">
+                    <a href="{{ url_for('tbl_roles.edit', role_id=role.id) }}" class="btn btn-sm btn-outline-primary" title="Edit">
+                        ✏️
+                    </a>
+                    <a href="{{ url_for('tbl_roles.delete_confirm', role_id=role.id) }}" class="btn btn-sm btn-outline-danger" title="Delete">
+                        🗑️
                     </a>
                 </td>
             </tr>
@@ -61,6 +48,6 @@
         </tbody>
     </table>
 {% else %}
-<p class="text-muted">No roles defined yet.</p>
+    <p class="text-muted">No roles defined yet.</p>
 {% endif %}
 {% endblock %}

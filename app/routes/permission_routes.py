@@ -12,6 +12,7 @@ from flask_login import login_required
 
 from app.forms.permission_forms import PermissionCreateForm, PermissionEditForm, PermissionConfirmDeleteForm
 from app.services.permission_service import PermissionService
+from flask_login import current_user
 
 logger = logging.getLogger("app")
 permission_bp = Blueprint("tbl_permissions", __name__, url_prefix="/permissions")
@@ -20,7 +21,7 @@ permission_bp = Blueprint("tbl_permissions", __name__, url_prefix="/permissions"
 @login_required
 def index():
     permissions = PermissionService.get_permission_all()
-    return render_template("permissions/index.html", permissions=permissions)
+    return render_template("permissions/index.html", permissions=permissions,  user=current_user)
 
 @permission_bp.route("/<int:permission_id>")
 @login_required
@@ -46,14 +47,12 @@ def create():
             flash(f"Permission '{permission.name}' created successfully.", "success")
             return redirect(url_for("tbl_permissions.index"))
         except Exception as exc:
+            logger.exception("Failed to create permission: %s", exc)
             flash("Failed to create permission.", "danger")
-            return render_template("permissions/create.html", form=form)
-    else:
-        if request.method == "POST":
-            import logging
-            logging.getLogger("app").warning("Permission creation form validation failed: %s", form.errors)
-            flash("There were errors creating the permission. Please review the form.", "warning")
-    
+    elif request.method == "POST":
+        logger.warning("Permission creation form validation failed: %s", form.errors)
+        flash("There were errors creating the permission. Please review the form.", "warning")
+
     return render_template("permissions/create.html", form=form)
 
 @permission_bp.route("/<int:permission_id>/edit", methods=["GET", "POST"])

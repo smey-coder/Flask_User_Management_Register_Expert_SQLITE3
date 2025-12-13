@@ -20,29 +20,23 @@ class UserService:
         role_id: Optional[int] = None
     ) ->UserTable:
         user = UserTable(
-            username= data["username"],
-            email = data["email"],
-            full_name = data["full_name"],
-            is_active= data.get("is_active", True),
+            username=data["username"],
+            email=data["email"],
+            full_name=data["full_name"],
+            is_active=data.get("is_active", True),
         )
         user.set_password(password)
-        
+
+        # Add user to session first
+        db.session.add(user)
+
+        # Assign roles AFTER user is in session
         if role_id:
             role = db.session.get(RoleTable, role_id)
             if role:
                 user.roles = [role]
-                
+
         db.session.commit()
-        return user
-        # try:
-        #     db.session.commit()
-        # except Exception as exc:
-        #     # Log and re-raise so caller can handle or app can show error
-        #     import logging
-        #     logging.getLogger("app").exception("Failed to create user: %s", exc)
-        #     db.session.rollback()
-        #     raise
-        # return user
     
     @staticmethod
     def update_user(

@@ -51,7 +51,7 @@ class UserCreateForm(FlaskForm):
     role_id = SelectField(
         "Role",
         coerce=int,
-        validators=[DataRequired()],
+        choices=[],
         render_kw={"placeholder": "Select role"},
     )
     password = PasswordField(

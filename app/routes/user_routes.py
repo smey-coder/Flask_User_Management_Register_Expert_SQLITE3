@@ -10,6 +10,8 @@ from flask_login import login_required
 
 from app.forms.user_forms import UserCreateForm, UserEditForm, UserConfirmDeleteForm
 from app.services.user_service import UserService
+from app.models.role import RoleTable
+
 
 user_bp = Blueprint("tbl_users", __name__, url_prefix="/users")
 
@@ -31,6 +33,9 @@ def detail(user_id: int):
 @login_required
 def create():
     form = UserCreateForm()
+    
+    roles = RoleTable.query.all()
+    form.role_id.choices = [(role.id, role.name) for role in roles]
     if form.validate_on_submit():
         data = {
             "username": form.username.data,
@@ -56,6 +61,8 @@ def edit(user_id: int):
         
     form = UserEditForm(original_user=user, obj=user)
     
+    roles = RoleTable.query.all()
+    form.role_id.choices = [(role.id, role.name) for role in roles]
     if form.validate_on_submit():
         data = {
             "username": form.username.data,
