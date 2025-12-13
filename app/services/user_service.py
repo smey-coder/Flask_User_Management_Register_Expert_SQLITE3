@@ -32,7 +32,6 @@ class UserService:
             if role:
                 user.roles = [role]
                 
-        db.session.add(user)
         db.session.commit()
         return user
         # try:

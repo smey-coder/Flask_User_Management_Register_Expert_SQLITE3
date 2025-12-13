@@ -40,6 +40,7 @@ def create():
         }
         password = form.password.data
         role_id = form.role_id.data or None
+        
         user = UserService.create_user(data, password, role_id)
         flash(f"User '{user.username}' was created successfully.", "success")
         return redirect(url_for("tbl_users.index"))
@@ -67,7 +68,7 @@ def edit(user_id: int):
         
         UserService.update_user(user, data, password, role_id)
         flash(f"User '{user.username}' was updated successfully.", "success")
-        return redirect(url_for("tbl_user.detail", user_id=user.id))
+        return redirect(url_for("tbl_users.detail", user_id=user.id))
 
     return render_template("users/edit.html", form=form, user=user)
 

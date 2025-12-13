@@ -4,7 +4,7 @@
 
 {% block content %}
 <h1 class="h3 mb-3">Create User</h1>
-<form method="post" action="{{ url_for('users.create') }}" novalidate>
+<form method="post" action="{{ url_for('tbl_users.create') }}" novalidate>
     {% include "users/_form.html"%}
 </form>
 {% endblock %}

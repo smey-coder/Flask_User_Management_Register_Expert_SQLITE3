@@ -16,6 +16,7 @@
                 <th>Username</th>
                 <th>Full Name</th>
                 <th>Email</th>
+                <th>Role</th>
                 <th>Status</th>
                 <th>Created</th>
                 <th class="text-end" style="wight: 160px;">Actions</th>
@@ -38,10 +39,21 @@
                 <td>{{ user.email}}</td>
 
                 <td>
-                    {% if user.is_active %}
-                    <span class="badge bg-success">Active</span>
+                    {% if user.roles%}
+                    {{ user.roles[0].name }}
+                    {% if user.roles|length > 1 %}
+                    <span class="text-warning small">(multiple)</span>
+                    {% endif %}
                     {% else %}
-                    <span class="badge bg-secondary">Inactive</span>
+                       <span class="text-muted">No Role</span>
+                    {% endif %}
+                </td>
+
+                <td>
+                    {% if user.is_active %}
+                    <span class="badge text-bg-success">Active</span>
+                    {% else %}
+                    <span class="badge text-bg-secondary">Inactive</span>
                     {% endif %}
                 </td>
 

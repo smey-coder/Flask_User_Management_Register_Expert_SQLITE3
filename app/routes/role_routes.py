@@ -72,12 +72,26 @@ def edit(role_id: int):
             app_logger.warning("Role edit form validation failed: %s. Errors=%s", role_id, form.errors)
     return render_template("roles/edit.html", form=form, role=role)
 
+@role_bp.route("/<int:role_id>/delete", methods=["GET"])
+def delete_confirm(role_id: int):
+    role = RoleService.get_role_by_id(role_id)
+    if role is None:
+        abort(404)
+        
+    form = RoleConfirmDeleteForm()
+    return render_template("roles/delete_confirm.html", role=role, form=form)
+
 @role_bp.route("/<int:role_id>/delete", methods=["POST"])
 def delete(role_id: int):
     role = RoleService.get_role_by_id(role_id)
     if role is None:
         abort(404)
-        
+
+    form = RoleConfirmDeleteForm()
+    if not form.validate_on_submit():
+        flash("Invalid delete request.", "danger")
+        return redirect(url_for("tbl_roles.detail", role_id=role.id))
+
     RoleService.delete_role(role)
     flash(f"Role '{role.name}' deleted successfully.", "success")
     return redirect(url_for("tbl_roles.index"))
