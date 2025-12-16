@@ -27,10 +27,9 @@
                 </td>
                 <td>{{ role.description or "_" }}</td>
                 <td>
-                    {% if role.permissions %}
-                        {% for perm in role.permissions %}
-                            <span class="badge bg-secondary">{{ perm.name }}</span>
-                        {% endfor %}
+                    {% if role.permissions%}
+                            <span class="badge bg-secondary">{{ role.permissions |length }} Permissions</span>
+                        
                     {% else %}
                         <span class="text-muted small">No permissions</span>
                     {% endif %}
