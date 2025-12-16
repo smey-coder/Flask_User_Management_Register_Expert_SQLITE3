@@ -37,8 +37,9 @@ def create():
             "name" : form.name.data,
             "description" : form.description.data,
         }
+        permission_ids = form.permission_ids.data
         try:
-            role = RoleService.create_role(data)
+            role = RoleService.create_role(data, permission_ids)
         except Exception as exc:
             flash("Failed to create role.", "danger")
             return render_template("roles/create.html", form=form)
@@ -64,8 +65,9 @@ def edit(role_id: int):
             "name" : form.name.data,
             "description" : form.description.data,
         }
+        permission_ids = form.permission_ids.data
         try:
-            role = RoleService.update_role(role, data)
+            role = RoleService.update_role(role, data, permission_ids)
         except Exception as exc:
             flash("Failed to update role.", "danger")
             return render_template("roles/edit.html", form=form, role=role)
