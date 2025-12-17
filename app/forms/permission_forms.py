@@ -12,6 +12,8 @@ MODULE_CHOICES = [
     ("Orders", "Orders"),
     ("General", "General"),
     ("Permission", "Permission"),
+    ("Fasts", "Fasts"),
+    ("Rules", "Rules"),
 ]
 class PermissionCreateForm(FlaskForm):
     
